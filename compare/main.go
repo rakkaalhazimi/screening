@@ -29,6 +29,7 @@ func getMapdir(root string) map[string]string {
 				return err
 			}
 
+			// Get path information
 			dir, _ := os.Stat(path)
 
 			// If not a directory, associate relative path with asbolute path
