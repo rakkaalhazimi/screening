@@ -94,8 +94,6 @@ func compareDirs(source string, target string) {
 func main() {
 	var source string = "./compare/source"
 	var target string = "./compare/target"
-	compare_dirs(source, target)
-	// fmt.Println(my_listdir1)
-	// fmt.Println(my_listdir2)
+	compareDirs(source, target)
 
 }
