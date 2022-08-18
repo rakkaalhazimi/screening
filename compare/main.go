@@ -41,6 +41,7 @@ func get_listdir(root string) []string {
 	if err != nil {
 		log.Println(err)
 	}
+
 	return dirs
 }
 
@@ -48,12 +49,12 @@ func compare_dirs(source string, target string) {
 	source_dirs := get_listdir(source)
 	target_dirs := get_listdir(target)
 
-	for i := 0; i < len(target_dirs); i++ {
-		var found bool = contain(source_dirs, target_dirs[i])
+	for _, target_dir := range target_dirs {
+		var found bool = contain(source_dirs, target_dir)
 
 		if found {
 		} else {
-			fmt.Printf("%s NEW", target_dirs[i])
+			fmt.Printf("%s NEW", target_dir)
 		}
 		fmt.Println("")
 	}

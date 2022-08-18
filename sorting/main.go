@@ -6,9 +6,9 @@ import "fmt"
 
 func max(arr []int) int {
 	var max_value int = 0
-	for i := 0; i < len(arr); i++ {
-		if max_value < arr[i] {
-			max_value = arr[i]
+	for _, value := range arr {
+		if max_value < value {
+			max_value = value
 		}
 	}
 	return max_value
@@ -26,8 +26,8 @@ func vertical_bar(arr []int) {
 		}
 		fmt.Println("")
 	}
-	for k := 0; k < len(arr); k++ {
-		fmt.Printf(" %d", arr[k])
+	for _, value := range arr {
+		fmt.Printf(" %d", value)
 	}
 	fmt.Println("")
 }
