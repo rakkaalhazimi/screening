@@ -2,10 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/codingsince1985/checksum"
 	"log"
 	"os"
 	"path/filepath"
+
+	"github.com/codingsince1985/checksum"
 )
 
 func contain(arr []string, content string) (string, bool) {
@@ -55,10 +56,10 @@ func keyToArr(m map[string]string) []string {
 }
 
 func isDifferentFile(source string, target string) bool {
-	source_hash, _ := checksum.MD5sum(source)
-	target_hash, _ := checksum.MD5sum(target)
+	sourceHash, _ := checksum.MD5sum(source)
+	targetHash, _ := checksum.MD5sum(target)
 
-	if source_hash == target_hash {
+	if sourceHash == targetHash {
 		return false
 	} else {
 		return true
