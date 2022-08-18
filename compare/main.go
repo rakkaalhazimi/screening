@@ -29,8 +29,10 @@ func get_listdir(root string) []string {
 
 			dir, _ := os.Stat(path)
 
+			// If not a directory, get the relative path
 			if !dir.IsDir() {
-				dirs = append(dirs, path)
+				relative_path, _ := filepath.Rel(root, path)
+				dirs = append(dirs, relative_path)
 			}
 
 			return nil
