@@ -2,24 +2,25 @@ package main
 
 import (
 	"fmt"
+	"github.com/codingsince1985/checksum"
 	"log"
 	"os"
 	"path/filepath"
 )
 
-func contain(arr []string, content string) bool {
-	var found bool = false
-	for i := 0; i < len(arr); i++ {
-		if arr[i] == content {
+func contain(arr []string, content string) (string, bool) {
+	var found bool
+	for _, item := range arr {
+		if item == content {
 			found = true
-			break
+			return item, found
 		}
 	}
-	return found
+	return "", found
 }
 
-func get_listdir(root string) []string {
-	var dirs = []string{}
+func getMapdir(root string) map[string]string {
+	var dirsMap = map[string]string{}
 	err := filepath.Walk(
 		root,
 		func(path string, info os.FileInfo, err error) error {
@@ -29,10 +30,10 @@ func get_listdir(root string) []string {
 
 			dir, _ := os.Stat(path)
 
-			// If not a directory, get the relative path
+			// If not a directory, associate relative path with asbolute path
 			if !dir.IsDir() {
-				relative_path, _ := filepath.Rel(root, path)
-				dirs = append(dirs, relative_path)
+				relativePath, _ := filepath.Rel(root, path)
+				dirsMap[relativePath] = path
 			}
 
 			return nil
@@ -42,19 +43,49 @@ func get_listdir(root string) []string {
 		log.Println(err)
 	}
 
-	return dirs
+	return dirsMap
 }
 
-func compare_dirs(source string, target string) {
-	source_dirs := get_listdir(source)
-	target_dirs := get_listdir(target)
+func keyToArr(m map[string]string) []string {
+	var arr []string
+	for key := range m {
+		arr = append(arr, key)
+	}
+	return arr
+}
 
-	for _, target_dir := range target_dirs {
-		var found bool = contain(source_dirs, target_dir)
+func isDifferentFile(source string, target string) bool {
+	source_hash, _ := checksum.MD5sum(source)
+	target_hash, _ := checksum.MD5sum(target)
 
-		if found {
+	if source_hash == target_hash {
+		return false
+	} else {
+		return true
+	}
+}
+
+func compareDirs(source string, target string) {
+
+	// Map of relative path : absolute path
+	sourceMaps := getMapdir(source)
+	targetMaps := getMapdir(target)
+
+	// Array of relative path
+	sourceDirs := keyToArr(sourceMaps)
+	targetDirs := keyToArr(targetMaps)
+
+	for _, targetPath := range targetDirs {
+		foundPath, isFound := contain(sourceDirs, targetPath)
+
+		if isFound {
+			// Compare files using absolute path
+			different := isDifferentFile(sourceMaps[foundPath], targetMaps[targetPath])
+			if different {
+				fmt.Printf("%s MODIFIED", targetPath)
+			}
 		} else {
-			fmt.Printf("%s NEW", target_dir)
+			fmt.Printf("%s NEW", targetPath)
 		}
 		fmt.Println("")
 	}
