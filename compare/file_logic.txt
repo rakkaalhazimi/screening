@@ -1,0 +1,4 @@
+ada di source dan target namun sama = IGNORED
+ada di source dan target namun beda = MODIFIED
+ada di source dan tidak ada di target = DELETED
+tidak ada di source dan ada di target = NEW
