@@ -77,19 +77,33 @@ func compareDirs(source string, target string) {
 	sourceDirs := keyToArr(sourceMaps)
 	targetDirs := keyToArr(targetMaps)
 
-	for _, targetPath := range targetDirs {
-		foundPath, isFound := contain(sourceDirs, targetPath)
+	// Traverse all target path
+	for _, sourcePath := range sourceDirs {
+		foundTargetPath, isTargetFound := contain(targetDirs, sourcePath)
 
-		if isFound {
+		if isTargetFound {
 			// Compare files using absolute path
-			different := isDifferentFile(sourceMaps[foundPath], targetMaps[targetPath])
+			different := isDifferentFile(sourceMaps[sourcePath], targetMaps[foundTargetPath])
+
+			// If files differ, print modified
 			if different {
-				fmt.Printf("%s MODIFIED", targetPath)
+				fmt.Printf("%s MODIFIED\n", sourcePath)
 			}
+
 		} else {
-			fmt.Printf("%s NEW", targetPath)
+			// If files not found, print new
+			fmt.Printf("%s NEW\n", sourcePath)
 		}
-		fmt.Println("")
+	}
+
+	// Traverse all source path
+	for _, targetPath := range targetDirs {
+		_, isSourceFound := contain(sourceDirs, targetPath)
+
+		// If not found in source but target, print deleted
+		if !isSourceFound {
+			fmt.Printf("%s DELETED\n", targetPath)
+		}
 	}
 }
 
